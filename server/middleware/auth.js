@@ -4,7 +4,7 @@ import User from '../models/user.js';
 
 // 🔒 Protect routes
 export const protect = async (req, res, next) => {
-  let token;
+  const token = req.cookies.token;
 
   if (
     req.headers.authorization &&

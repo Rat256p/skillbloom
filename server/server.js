@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import colors from 'colors';
 import cookieParser from 'cookie-parser';
-import mongoSanitize from 'express-mongo-sanitize';
+//import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(mongoSanitize());
+//app.use(mongoSanitize());
 app.use(helmet());
 app.use(xss());
 

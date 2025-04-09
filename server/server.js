@@ -6,7 +6,7 @@ import colors from 'colors';
 import cookieParser from 'cookie-parser';
 //import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
-import xss from 'xss-clean';
+//import xss from 'xss-clean';
 import rateLimit from 'express-rate-limit';
 import hpp from 'hpp';
 import cors from 'cors';

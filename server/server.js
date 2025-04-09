@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'development') {
 
 //app.use(mongoSanitize());
 app.use(helmet());
-app.use(xss());
+//app.use(xss());
 
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000,

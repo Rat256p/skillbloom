@@ -39,6 +39,11 @@ mongoose
 
 const app = express();
 
+app.use(cors({
+  origin: ['https://skillbloom.netlify.app'], // your frontend deployed URL
+  credentials: true
+}));
+
 // ✅ Middleware
 app.use(express.json());
 app.use(cookieParser());
@@ -59,7 +64,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(hpp());
-app.use(cors());
+
 
 // ✅ Routes
 app.use('/api/auth', authRoutes);

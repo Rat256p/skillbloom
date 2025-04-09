@@ -1,12 +1,12 @@
-const ErrorResponse = require('../utils/errorResponse');
-const Order = require('SKILLBLOOM1/models/order');
-const Product = require('SKILLBLOOM1/models/Product');
-const Course = require('SKILLBLOOM1/models/Course');
+import ErrorResponse from '../utils/errorResponse.js';
+import Order from '../models/order.js';
+import Product from '../models/product.js';
+import Course from '../models/course.js';
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
-exports.createOrder = async (req, res, next) => {
+export const createOrder = async (req, res, next) => {
   try {
     const { items, shipping, paymentMethod } = req.body;
 
@@ -14,7 +14,6 @@ exports.createOrder = async (req, res, next) => {
       return next(new ErrorResponse('No order items', 400));
     }
 
-    // Calculate total price
     let totalPrice = 0;
     const orderItems = [];
 
@@ -33,7 +32,6 @@ exports.createOrder = async (req, res, next) => {
           quantity: item.quantity,
           price: product.price
         });
-        // Update product stock
         product.stock -= item.quantity;
         await product.save();
       } else if (item.type === 'course') {
@@ -47,7 +45,6 @@ exports.createOrder = async (req, res, next) => {
           quantity: 1,
           price: course.price
         });
-        // Update course students count
         course.students += 1;
         await course.save();
       }
@@ -73,7 +70,7 @@ exports.createOrder = async (req, res, next) => {
 // @desc    Get orders by user
 // @route   GET /api/orders/myorders
 // @access  Private
-exports.getMyOrders = async (req, res, next) => {
+export const getMyOrders = async (req, res, next) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .populate({
@@ -98,9 +95,8 @@ exports.getMyOrders = async (req, res, next) => {
 // @desc    Get orders for seller
 // @route   GET /api/orders/seller
 // @access  Private (seller)
-exports.getSellerOrders = async (req, res, next) => {
+export const getSellerOrders = async (req, res, next) => {
   try {
-    // Find products/courses by this seller
     const products = await Product.find({ seller: req.user.id }).select('_id');
     const courses = await Course.find({ instructor: req.user.id }).select('_id');
 

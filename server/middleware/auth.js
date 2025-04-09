@@ -1,70 +1,42 @@
-const mongoose = require('mongoose');
+import jwt from 'jsonwebtoken';
+import ErrorResponse from '../utils/errorResponse.js';
+import User from '../models/user.js';
 
-const orderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  items: [{
-    product: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Product',
-    },
-    course: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Course',
-    },
-    quantity: {
-      type: Number,
-      default: 1
-    },
-    price: {
-      type: Number,
-      required: true
-    }
-  }],
-  shipping: {
-    address: String,
-    city: String,
-    postalCode: String,
-    country: String
-  },
-  paymentMethod: {
-    type: String,
-    required: true
-  },
-  paymentResult: {
-    id: String,
-    status: String,
-    update_time: String,
-    email_address: String
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: 0.0
-  },
-  isPaid: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  paidAt: {
-    type: Date
-  },
-  isDelivered: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  deliveredAt: {
-    type: Date
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+// 🔒 Protect routes
+export const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
   }
-});
 
-module.exports = mongoose.model('Order', orderSchema);
+  if (!token) {
+    return next(new ErrorResponse('Not authorized to access this route', 401));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (err) {
+    return next(new ErrorResponse('Not authorized to access this route', 401));
+  }
+};
+
+// 🔑 Grant access to specific roles
+export const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.accountType)) {
+      return next(
+        new ErrorResponse(
+          `User role ${req.user.accountType} is not authorized to access this route`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};

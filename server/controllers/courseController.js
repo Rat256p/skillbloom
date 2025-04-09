@@ -1,11 +1,11 @@
-const ErrorResponse = require('../utils/errorResponse');
-const Course = require('SKILLBLOOM1/models/course');
-const User = require('SKILLBLOOM1/models/user');
+import ErrorResponse from '../utils/errorResponse.js';
+import Course from '../models/course.js';
+import User from '../models/user.js';
 
 // @desc    Get all courses
 // @route   GET /api/courses
 // @access  Public
-exports.getCourses = async (req, res, next) => {
+export const getCourses = async (req, res, next) => {
   try {
     const courses = await Course.find().populate('instructor', 'name email');
 
@@ -22,7 +22,7 @@ exports.getCourses = async (req, res, next) => {
 // @desc    Get single course
 // @route   GET /api/courses/:id
 // @access  Public
-exports.getCourse = async (req, res, next) => {
+export const getCourse = async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id).populate('instructor', 'name email');
 
@@ -44,9 +44,8 @@ exports.getCourse = async (req, res, next) => {
 // @desc    Create new course
 // @route   POST /api/courses
 // @access  Private (seller)
-exports.createCourse = async (req, res, next) => {
+export const createCourse = async (req, res, next) => {
   try {
-    // Add user to req.body
     req.body.instructor = req.user.id;
 
     const course = await Course.create(req.body);
@@ -63,7 +62,7 @@ exports.createCourse = async (req, res, next) => {
 // @desc    Get courses by instructor
 // @route   GET /api/courses/instructor
 // @access  Private (seller)
-exports.getInstructorCourses = async (req, res, next) => {
+export const getInstructorCourses = async (req, res, next) => {
   try {
     const courses = await Course.find({ instructor: req.user.id });
 

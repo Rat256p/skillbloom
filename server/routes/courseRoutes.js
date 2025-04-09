@@ -1,13 +1,14 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   getCourses,
   getCourse,
   createCourse,
   getInstructorCourses
-} = require('../controllers/courseController');
+} from '../controllers/courseController.js';
+
+import { protect, authorize } from '../middleware/auth.js';
 
 const router = express.Router();
-const { protect, authorize } = require('../middleware/auth');
 
 router.route('/')
   .get(getCourses)
@@ -19,4 +20,4 @@ router.route('/instructor')
 router.route('/:id')
   .get(getCourse);
 
-module.exports = router;
+export default router;

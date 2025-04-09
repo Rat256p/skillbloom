@@ -1,11 +1,11 @@
-const ErrorResponse = require('../utils/errorResponse');
-const Product = require('SKILLBLOOM1/models/product');
-const User = require('SKILLBLOOM1/models/user');
+import ErrorResponse from '../utils/errorResponse.js';
+import Product from '../models/product.js';
+import User from '../models/user.js';
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
-exports.getProducts = async (req, res, next) => {
+export const getProducts = async (req, res, next) => {
   try {
     const products = await Product.find().populate('seller', 'name email');
 
@@ -22,7 +22,7 @@ exports.getProducts = async (req, res, next) => {
 // @desc    Get single product
 // @route   GET /api/products/:id
 // @access  Public
-exports.getProduct = async (req, res, next) => {
+export const getProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id).populate('seller', 'name email');
 
@@ -44,7 +44,7 @@ exports.getProduct = async (req, res, next) => {
 // @desc    Create new product
 // @route   POST /api/products
 // @access  Private (seller)
-exports.createProduct = async (req, res, next) => {
+export const createProduct = async (req, res, next) => {
   try {
     // Add user to req.body
     req.body.seller = req.user.id;
@@ -63,7 +63,7 @@ exports.createProduct = async (req, res, next) => {
 // @desc    Get products by seller
 // @route   GET /api/products/seller
 // @access  Private (seller)
-exports.getSellerProducts = async (req, res, next) => {
+export const getSellerProducts = async (req, res, next) => {
   try {
     const products = await Product.find({ seller: req.user.id });
 

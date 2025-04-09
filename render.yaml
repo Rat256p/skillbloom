@@ -1,17 +1,19 @@
 services:
   - type: web
     name: skillbloom-backend
-    runtime: node
+    env: node
+    region: oregon
+    plan: free
     buildCommand: cd server && npm install
-    startCommand: cd server && node server.js
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
       - key: MONGO_URI
-        value: mongodb+srv://skillbloom-admin:StrongPassword123@cluster0.mongodb.net/skillbloom?retryWrites=true&w=majority
+        value: mongodb+srv://skillbloomadmin:123456skillbloom@cluster0.mongodb.net/skillbloom?retryWrites=true&w=majority
       - key: JWT_SECRET
         value: your_jwt_secret_here
       - key: JWT_EXPIRE
         value: 30d
-      - key: PORT
-        value: 3000
